@@ -40,12 +40,16 @@ button:hover { background:#1565c0; }
   <div class="tab" data-target="esp2">Invernadero 2</div>
   <div class="tab" data-target="esp3">Invernadero 3</div>
   <div class="tab" data-target="esp4">Invernadero 4</div>
+  <div class="tab" data-target="esp5">Invernadero 5</div>
+  <div class="tab" data-target="esp6">Invernadero 6</div>
 </div>
 
 <div id="esp1" class="tab-content active"></div>
 <div id="esp2" class="tab-content"></div>
 <div id="esp3" class="tab-content"></div>
 <div id="esp4" class="tab-content"></div>
+<div id="esp5" class="tab-content"></div>
+<div id="esp6" class="tab-content"></div>
 
 <script>
 function actualizarFecha(){
@@ -56,34 +60,48 @@ setInterval(actualizarFecha,1000);
 actualizarFecha();
 
 const ESPs = {
-  esp1:{ clientId:"ESP32_Planta1", sensores:{
-    1:{nombre:"Sensor 1", topic:"sensor/plantas/1", datos:[], grafica:"grafica_esp1_1", status:"status_esp1_1"},
-    2:{nombre:"Sensor 2", topic:"sensor/plantas/2", datos:[], grafica:"grafica_esp1_2", status:"status_esp1_2"},
-    3:{nombre:"Sensor 3", topic:"sensor/plantas/3", datos:[], grafica:"grafica_esp1_3", status:"status_esp1_3"},
-    4:{nombre:"Sensor 4", topic:"sensor/plantas/4", datos:[], grafica:"grafica_esp1_4", status:"status_esp1_4"},
-    5:{nombre:"Sensor 5", topic:"sensor/plantas/5", datos:[], grafica:"grafica_esp1_5", status:"status_esp1_5"}
-  }},
-  esp2:{ clientId:"ESP32_Planta2", sensores:{
-    1:{nombre:"Sensor 1", topic:"sensor/plantas/6", datos:[], grafica:"grafica_esp2_1", status:"status_esp2_1"},
-    2:{nombre:"Sensor 2", topic:"sensor/plantas/7", datos:[], grafica:"grafica_esp2_2", status:"status_esp2_2"},
-    3:{nombre:"Sensor 3", topic:"sensor/plantas/8", datos:[], grafica:"grafica_esp2_3", status:"status_esp2_3"},
-    4:{nombre:"Sensor 4", topic:"sensor/plantas/9", datos:[], grafica:"grafica_esp2_4", status:"status_esp2_4"},
-    5:{nombre:"Sensor 5", topic:"sensor/plantas/10", datos:[], grafica:"grafica_esp2_5", status:"status_esp2_5"}
-  }},
-  esp3:{ clientId:"ESP32_Planta3", sensores:{
-    1:{nombre:"Sensor 1", topic:"sensor/plantas/11", datos:[], grafica:"grafica_esp3_1", status:"status_esp3_1"},
-    2:{nombre:"Sensor 2", topic:"sensor/plantas/12", datos:[], grafica:"grafica_esp3_2", status:"status_esp3_2"},
-    3:{nombre:"Sensor 3", topic:"sensor/plantas/13", datos:[], grafica:"grafica_esp3_3", status:"status_esp3_3"},
-    4:{nombre:"Sensor 4", topic:"sensor/plantas/14", datos:[], grafica:"grafica_esp3_4", status:"status_esp3_4"},
-    5:{nombre:"Sensor 5", topic:"sensor/plantas/15", datos:[], grafica:"grafica_esp3_5", status:"status_esp3_5"}
-  }},
-  esp4:{ clientId:"ESP32_Planta4", sensores:{
-    1:{nombre:"Sensor 1", topic:"sensor/plantas/16", datos:[], grafica:"grafica_esp4_1", status:"status_esp4_1"},
-    2:{nombre:"Sensor 2", topic:"sensor/plantas/17", datos:[], grafica:"grafica_esp4_2", status:"status_esp4_2"},
-    3:{nombre:"Sensor 3", topic:"sensor/plantas/18", datos:[], grafica:"grafica_esp4_3", status:"status_esp4_3"},
-    4:{nombre:"Sensor 4", topic:"sensor/plantas/19", datos:[], grafica:"grafica_esp4_4", status:"status_esp4_4"},
-    5:{nombre:"Sensor 5", topic:"sensor/plantas/20", datos:[], grafica:"grafica_esp4_5", status:"status_esp4_5"}
-  }},
+  esp1: { 
+    clientId: "ESP32_Planta1", 
+    sensores: {
+      1: {nombre: "Sensor 1", topic: "sensor/plantas/1", datos: [], grafica: "grafica_esp1_1", status: "status_esp1_1"},
+      2: {nombre: "Sensor 2", topic: "sensor/plantas/2", datos: [], grafica: "grafica_esp1_2", status: "status_esp1_2"}
+    }
+  },
+  esp2: { 
+    clientId: "ESP32_Planta2", 
+    sensores: {
+      1: {nombre: "Sensor 1", topic: "sensor/plantas/3", datos: [], grafica: "grafica_esp2_1", status: "status_esp2_1"},
+      2: {nombre: "Sensor 2", topic: "sensor/plantas/4", datos: [], grafica: "grafica_esp2_2", status: "status_esp2_2"}
+    }
+  },
+  esp3: { 
+    clientId: "ESP32_Planta3", 
+    sensores: {
+      1: {nombre: "Sensor 1", topic: "sensor/plantas/5", datos: [], grafica: "grafica_esp3_1", status: "status_esp3_1"},
+      2: {nombre: "Sensor 2", topic: "sensor/plantas/6", datos: [], grafica: "grafica_esp3_2", status: "status_esp3_2"}
+    }
+  },
+  esp4: { 
+    clientId: "ESP32_Planta4", 
+    sensores: {
+      1: {nombre: "Sensor 1", topic: "sensor/plantas/7", datos: [], grafica: "grafica_esp4_1", status: "status_esp4_1"},
+      2: {nombre: "Sensor 2", topic: "sensor/plantas/8", datos: [], grafica: "grafica_esp4_2", status: "status_esp4_2"}
+    }
+  },
+  esp5: { 
+    clientId: "ESP32_Planta5", 
+    sensores: {
+      1: {nombre: "Sensor 1", topic: "sensor/plantas/9", datos: [], grafica: "grafica_esp5_1", status: "status_esp5_1"},
+      2: {nombre: "Sensor 2", topic: "sensor/plantas/10", datos: [], grafica: "grafica_esp5_2", status: "status_esp5_2"}
+    }
+  },
+  esp6: { 
+    clientId: "ESP32_Planta6", 
+    sensores: {
+      1: {nombre: "Sensor 1", topic: "sensor/plantas/11", datos: [], grafica: "grafica_esp6_1", status: "status_esp6_1"},
+      2: {nombre: "Sensor 2", topic: "sensor/plantas/12", datos: [], grafica: "grafica_esp6_2", status: "status_esp6_2"}
+    }
+  }
 };
 
 // ------------------ GENERAR BLOQUES ------------------
