@@ -15,10 +15,15 @@ header h1 { margin: 0; font-size: 28px; display: flex; justify-content: center; 
 header h1 i { color: #1a3d7c; }
 header #fecha { font-size:16px; margin-top:5px; color:#333; }
 .tab-container { display: flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
-.tab { padding:10px 15px; background:#e0e0e0; border-radius:5px; cursor:pointer; font-weight:bold; color:#333; }
+.tab { padding:12px 20px; background:#e0e0e0; border-radius:8px; cursor:pointer; font-weight:bold; color:#333; font-size:16px; }
 .tab.active { background:#1e88e5; color:white; }
 .tab-content { display:none; }
 .tab-content.active { display:block; }
+.subtab-container { display: flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; background:#f8f8f8; padding:10px; border-radius:8px; }
+.subtab { padding:8px 12px; background:#d0d0d0; border-radius:5px; cursor:pointer; font-weight:bold; color:#333; font-size:14px; }
+.subtab.active { background:#4caf50; color:white; }
+.subtab-content { display:none; }
+.subtab-content.active { display:block; }
 .sensor-container { display:flex; gap:20px; margin-bottom:30px; flex-wrap:wrap; }
 .panel { border:1px solid #ccc; padding:15px; border-radius:10px; flex:1; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.1); min-width:250px; }
 .panel canvas {width: 600px !important; height: 300px !important; min-width: 600px !important; min-height: 300px !important; max-width: 600px !important; max-height: 300px !important;}
@@ -36,20 +41,39 @@ button:hover { background:#1565c0; }
 </header>
 
 <div class="tab-container">
-  <div class="tab active" data-target="esp1">Invernadero 1</div>
-  <div class="tab" data-target="esp2">Invernadero 2</div>
-  <div class="tab" data-target="esp3">Invernadero 3</div>
-  <div class="tab" data-target="esp4">Invernadero 4</div>
-  <div class="tab" data-target="esp5">Invernadero 5</div>
-  <div class="tab" data-target="esp6">Invernadero 6</div>
+  <div class="tab active" data-target="con_agua">🌱 Plantas con Agua</div>
+  <div class="tab" data-target="sin_agua">🌵 Plantas sin Agua</div>
 </div>
 
-<div id="esp1" class="tab-content active"></div>
-<div id="esp2" class="tab-content"></div>
-<div id="esp3" class="tab-content"></div>
-<div id="esp4" class="tab-content"></div>
-<div id="esp5" class="tab-content"></div>
-<div id="esp6" class="tab-content"></div>
+<div id="con_agua" class="tab-content active">
+  <div class="subtab-container">
+    <div class="subtab active" data-target="planta1">Planta 1</div>
+    <div class="subtab" data-target="planta2">Planta 2</div>
+    <div class="subtab" data-target="planta3">Planta 3</div>
+    <div class="subtab" data-target="planta4">Planta 4</div>
+    <div class="subtab" data-target="planta5">Planta 5</div>
+  </div>
+  <div id="planta1" class="subtab-content active"></div>
+  <div id="planta2" class="subtab-content"></div>
+  <div id="planta3" class="subtab-content"></div>
+  <div id="planta4" class="subtab-content"></div>
+  <div id="planta5" class="subtab-content"></div>
+</div>
+
+<div id="sin_agua" class="tab-content">
+  <div class="subtab-container">
+    <div class="subtab active" data-target="planta6">Planta 6</div>
+    <div class="subtab" data-target="planta7">Planta 7</div>
+    <div class="subtab" data-target="planta8">Planta 8</div>
+    <div class="subtab" data-target="planta9">Planta 9</div>
+    <div class="subtab" data-target="planta10">Planta 10</div>
+  </div>
+  <div id="planta6" class="subtab-content active"></div>
+  <div id="planta7" class="subtab-content"></div>
+  <div id="planta8" class="subtab-content"></div>
+  <div id="planta9" class="subtab-content"></div>
+  <div id="planta10" class="subtab-content"></div>
+</div>
 
 <script>
 function actualizarFecha(){
@@ -60,46 +84,84 @@ setInterval(actualizarFecha,1000);
 actualizarFecha();
 
 const ESPs = {
-  esp1: { 
+  planta1: { 
     clientId: "ESP32_Planta1", 
+    categoria: "con_agua",
     sensores: {
-      1: {nombre: "Sensor 1", topic: "sensor/plantas/1", datos: [], grafica: "grafica_esp1_1", status: "status_esp1_1"},
-      2: {nombre: "Sensor 2", topic: "sensor/plantas/2", datos: [], grafica: "grafica_esp1_2", status: "status_esp1_2"}
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/1", datos: [], grafica: "grafica_planta1_1", status: "status_planta1_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/2", datos: [], grafica: "grafica_planta1_2", status: "status_planta1_2"}
     }
   },
-  esp2: { 
+  planta2: { 
     clientId: "ESP32_Planta2", 
+    categoria: "con_agua",
     sensores: {
-      1: {nombre: "Sensor 1", topic: "sensor/plantas/3", datos: [], grafica: "grafica_esp2_1", status: "status_esp2_1"},
-      2: {nombre: "Sensor 2", topic: "sensor/plantas/4", datos: [], grafica: "grafica_esp2_2", status: "status_esp2_2"}
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/3", datos: [], grafica: "grafica_planta2_1", status: "status_planta2_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/4", datos: [], grafica: "grafica_planta2_2", status: "status_planta2_2"}
     }
   },
-  esp3: { 
+  planta3: { 
     clientId: "ESP32_Planta3", 
+    categoria: "con_agua",
     sensores: {
-      1: {nombre: "Sensor 1", topic: "sensor/plantas/5", datos: [], grafica: "grafica_esp3_1", status: "status_esp3_1"},
-      2: {nombre: "Sensor 2", topic: "sensor/plantas/6", datos: [], grafica: "grafica_esp3_2", status: "status_esp3_2"}
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/5", datos: [], grafica: "grafica_planta3_1", status: "status_planta3_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/6", datos: [], grafica: "grafica_planta3_2", status: "status_planta3_2"}
     }
   },
-  esp4: { 
+  planta4: { 
     clientId: "ESP32_Planta4", 
+    categoria: "con_agua",
     sensores: {
-      1: {nombre: "Sensor 1", topic: "sensor/plantas/7", datos: [], grafica: "grafica_esp4_1", status: "status_esp4_1"},
-      2: {nombre: "Sensor 2", topic: "sensor/plantas/8", datos: [], grafica: "grafica_esp4_2", status: "status_esp4_2"}
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/7", datos: [], grafica: "grafica_planta4_1", status: "status_planta4_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/8", datos: [], grafica: "grafica_planta4_2", status: "status_planta4_2"}
     }
   },
-  esp5: { 
+  planta5: { 
     clientId: "ESP32_Planta5", 
+    categoria: "con_agua",
     sensores: {
-      1: {nombre: "Sensor 1", topic: "sensor/plantas/9", datos: [], grafica: "grafica_esp5_1", status: "status_esp5_1"},
-      2: {nombre: "Sensor 2", topic: "sensor/plantas/10", datos: [], grafica: "grafica_esp5_2", status: "status_esp5_2"}
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/9", datos: [], grafica: "grafica_planta5_1", status: "status_planta5_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/10", datos: [], grafica: "grafica_planta5_2", status: "status_planta5_2"}
     }
   },
-  esp6: { 
+  planta6: { 
     clientId: "ESP32_Planta6", 
+    categoria: "sin_agua",
     sensores: {
-      1: {nombre: "Sensor 1", topic: "sensor/plantas/11", datos: [], grafica: "grafica_esp6_1", status: "status_esp6_1"},
-      2: {nombre: "Sensor 2", topic: "sensor/plantas/12", datos: [], grafica: "grafica_esp6_2", status: "status_esp6_2"}
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/11", datos: [], grafica: "grafica_planta6_1", status: "status_planta6_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/12", datos: [], grafica: "grafica_planta6_2", status: "status_planta6_2"}
+    }
+  },
+  planta7: { 
+    clientId: "ESP32_Planta7", 
+    categoria: "sin_agua",
+    sensores: {
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/13", datos: [], grafica: "grafica_planta7_1", status: "status_planta7_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/14", datos: [], grafica: "grafica_planta7_2", status: "status_planta7_2"}
+    }
+  },
+  planta8: { 
+    clientId: "ESP32_Planta8", 
+    categoria: "sin_agua",
+    sensores: {
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/15", datos: [], grafica: "grafica_planta8_1", status: "status_planta8_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/16", datos: [], grafica: "grafica_planta8_2", status: "status_planta8_2"}
+    }
+  },
+  planta9: { 
+    clientId: "ESP32_Planta9", 
+    categoria: "sin_agua",
+    sensores: {
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/17", datos: [], grafica: "grafica_planta9_1", status: "status_planta9_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/18", datos: [], grafica: "grafica_planta9_2", status: "status_planta9_2"}
+    }
+  },
+  planta10: { 
+    clientId: "ESP32_Planta10", 
+    categoria: "sin_agua",
+    sensores: {
+      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/19", datos: [], grafica: "grafica_planta10_1", status: "status_planta10_1"},
+      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/20", datos: [], grafica: "grafica_planta10_2", status: "status_planta10_2"}
     }
   }
 };
@@ -209,6 +271,17 @@ document.querySelectorAll(".tab").forEach(tab=>{
     document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
     tab.classList.add("active");
     document.getElementById(tab.dataset.target).classList.add("active");
+  });
+});
+
+// ------------------ SUBPESTAÑAS ------------------
+document.querySelectorAll(".subtab").forEach(subtab=>{
+  subtab.addEventListener("click", ()=>{
+    const parent = subtab.closest('.tab-content');
+    parent.querySelectorAll(".subtab").forEach(t=>t.classList.remove("active"));
+    parent.querySelectorAll(".subtab-content").forEach(c=>c.classList.remove("active"));
+    subtab.classList.add("active");
+    document.getElementById(subtab.dataset.target).classList.add("active");
   });
 });
 </script>
