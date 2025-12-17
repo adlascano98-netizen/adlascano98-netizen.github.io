@@ -196,10 +196,32 @@ Object.keys(ESPs).forEach(espKey=>{
 
 // ------------------ CONEXIÓN MQTT ------------------
 document.addEventListener('DOMContentLoaded', function() {
+  const sessionSuffix = Math.random().toString(16).slice(2);
   Object.keys(ESPs).forEach(espKey=>{
     const esp = ESPs[espKey];
     console.log(`Conectando ${esp.clientId}...`);
-    esp.client = mqtt.connect("wss://broker.emqx.io:8084/mqtt",{ clientId: esp.clientId, keepalive:60, reconnectPeriod:3000 });
+    const webClientId = `${esp.clientId}_${sessionSuffix}`;
+    esp.client = mqtt.connect("wss://broker.emqx.io:8084/mqtt",{ clientId: webClientId, keepalive:60, reconnectPeriod:3000 });
+
+  esp.client.on("reconnect", ()=>{
+    console.warn(`MQTT reconnect ${espKey} (${webClientId})`);
+  });
+
+  esp.client.on("offline", ()=>{
+    console.warn(`MQTT offline ${espKey} (${webClientId})`);
+    const statusEl = document.getElementById(`status_${espKey}`);
+    if (statusEl) statusEl.textContent = "Offline ❌";
+  });
+
+  esp.client.on("close", ()=>{
+    console.warn(`MQTT close ${espKey} (${webClientId})`);
+  });
+
+  esp.client.on("error", (err)=>{
+    console.error(`MQTT error ${espKey} (${webClientId})`, err);
+    const statusEl = document.getElementById(`status_${espKey}`);
+    if (statusEl) statusEl.textContent = "Error ❌";
+  });
 
   esp.client.on("connect", ()=>{
     document.getElementById(`status_${espKey}`).textContent="Conectado ✅";
@@ -222,7 +244,8 @@ document.addEventListener('DOMContentLoaded', function() {
       Object.keys(esp.sensores).forEach(sId=>{
         const s = esp.sensores[sId];
         if(s.topic===topic){
-          s.datos.push([data.tiempo,data.VD,data.Rx]);
+          const tiempoNum = Number(data.tiempo);
+          s.datos.push([tiempoNum,data.VD,data.Rx]);
 
           s.lastMessageAt = Date.now();
           document.getElementById(s.status).textContent = "Recibiendo ✅";
@@ -241,16 +264,16 @@ document.addEventListener('DOMContentLoaded', function() {
           const m = totalMin%60;
           document.getElementById(`Tiempo_${espKey}_${sId}`).textContent=`${h}h ${m}m 0s`;
 
-          if(!s.ultimoTiempoGrafica) s.ultimoTiempoGrafica=0;
-          if(data.tiempo - s.ultimoTiempoGrafica >=3){
-            s.graficaObj.data.labels.push(data.tiempo);
+          if(s.ultimoTiempoGrafica === undefined || s.ultimoTiempoGrafica === null) s.ultimoTiempoGrafica = -Infinity;
+          if(tiempoNum - s.ultimoTiempoGrafica >= 1){
+            s.graficaObj.data.labels.push(tiempoNum);
             s.graficaObj.data.datasets[0].data.push(data.VD);
             if(s.graficaObj.data.labels.length>50){
               s.graficaObj.data.labels.shift();
               s.graficaObj.data.datasets[0].data.shift();
             }
             s.graficaObj.update();
-            s.ultimoTiempoGrafica = data.tiempo;
+            s.ultimoTiempoGrafica = tiempoNum;
           }
         }
       });
