@@ -205,7 +205,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById(`status_${espKey}`).textContent="Conectado ✅";
     Object.values(esp.sensores).forEach(s=>{
       esp.client.subscribe(s.topic, err=>{
-        document.getElementById(s.status).textContent = err ? "Error ❌" : "Suscrito ✅";
+        if (err) {
+          document.getElementById(s.status).textContent = "Error ❌";
+          return;
+        }
+        document.getElementById(s.status).textContent = "Esperando datos ⏳";
+        s.lastMessageAt = null;
+        if (s.offlineTimer) clearTimeout(s.offlineTimer);
       });
     });
   });
@@ -217,6 +223,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const s = esp.sensores[sId];
         if(s.topic===topic){
           s.datos.push([data.tiempo,data.VD,data.Rx]);
+
+          s.lastMessageAt = Date.now();
+          document.getElementById(s.status).textContent = "Recibiendo ✅";
+          if (s.offlineTimer) clearTimeout(s.offlineTimer);
+          s.offlineTimer = setTimeout(() => {
+            document.getElementById(s.status).textContent = "Sin datos ❌";
+          }, 150000);
 
           document.getElementById(`VD_${espKey}_${sId}`).textContent=data.VD;
           document.getElementById(`Rx_${espKey}_${sId}`).textContent=data.Rx;
