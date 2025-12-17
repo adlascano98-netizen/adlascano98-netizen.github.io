@@ -41,38 +41,36 @@ button:hover { background:#1565c0; }
 </header>
 
 <div class="tab-container">
-  <div class="tab active" data-target="con_agua">🌱 Plantas con Agua</div>
-  <div class="tab" data-target="sin_agua">🌵 Plantas sin Agua</div>
+  <div class="tab active" data-target="con_riego">🌱 Plantas con Riego</div>
+  <div class="tab" data-target="sin_riego">🌵 Plantas sin Riego</div>
 </div>
 
-<div id="con_agua" class="tab-content active">
+<div id="con_riego" class="tab-content active">
   <div class="subtab-container">
-    <div class="subtab active" data-target="planta1">Planta 1</div>
+    <div class="subtab active" data-target="plantaControl_con">Planta Control</div>
+    <div class="subtab" data-target="planta1">Planta 1</div>
     <div class="subtab" data-target="planta2">Planta 2</div>
     <div class="subtab" data-target="planta3">Planta 3</div>
-    <div class="subtab" data-target="planta4">Planta 4</div>
-    <div class="subtab" data-target="planta5">Planta 5</div>
+
   </div>
-  <div id="planta1" class="subtab-content active"></div>
+  <div id="plantaControl_con" class="subtab-content active"></div>
+  <div id="planta1" class="subtab-content"></div>
   <div id="planta2" class="subtab-content"></div>
   <div id="planta3" class="subtab-content"></div>
-  <div id="planta4" class="subtab-content"></div>
-  <div id="planta5" class="subtab-content"></div>
+
 </div>
 
-<div id="sin_agua" class="tab-content">
+<div id="sin_riego" class="tab-content">
   <div class="subtab-container">
-    <div class="subtab active" data-target="planta6">Planta 6</div>
+    <div class="subtab active" data-target="plantaControl_sin">Planta Control</div>
+    <div class="subtab" data-target="planta5">Planta 5</div>
+    <div class="subtab" data-target="planta6">Planta 6</div>
     <div class="subtab" data-target="planta7">Planta 7</div>
-    <div class="subtab" data-target="planta8">Planta 8</div>
-    <div class="subtab" data-target="planta9">Planta 9</div>
-    <div class="subtab" data-target="planta10">Planta 10</div>
   </div>
-  <div id="planta6" class="subtab-content active"></div>
+  <div id="plantaControl_sin" class="subtab-content active"></div>
+  <div id="planta5" class="subtab-content"></div>
+  <div id="planta6" class="subtab-content"></div>
   <div id="planta7" class="subtab-content"></div>
-  <div id="planta8" class="subtab-content"></div>
-  <div id="planta9" class="subtab-content"></div>
-  <div id="planta10" class="subtab-content"></div>
 </div>
 
 <script>
@@ -84,92 +82,82 @@ setInterval(actualizarFecha,1000);
 actualizarFecha();
 
 const ESPs = {
+  plantaControl_con: { 
+    clientId: "ESP32_ControlCon", 
+    categoria: "con_riego",
+    sensores: {
+      1: {nombre: "Membrana 1", topic: "sensor/plantas/1", datos: [], grafica: "grafica_planta_1", status: "status_planta_1"},
+      2: {nombre: "Membrana 2", topic: "sensor/plantas/2", datos: [], grafica: "grafica_planta_2", status: "status_planta_2"}
+    }
+  },
   planta1: { 
     clientId: "ESP32_Planta1", 
-    categoria: "con_agua",
+    categoria: "con_riego",
     sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/1", datos: [], grafica: "grafica_planta1_1", status: "status_planta1_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/2", datos: [], grafica: "grafica_planta1_2", status: "status_planta1_2"}
+      1: {nombre: "Membrana 1", topic: "sensor/plantas/3", datos: [], grafica: "grafica_planta_3", status: "status_planta_3"},
+      2: {nombre: "Membrana 2", topic: "sensor/plantas/4", datos: [], grafica: "grafica_planta_4", status: "status_planta_4"}
     }
   },
   planta2: { 
     clientId: "ESP32_Planta2", 
-    categoria: "con_agua",
+    categoria: "con_riego",
     sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/3", datos: [], grafica: "grafica_planta2_1", status: "status_planta2_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/4", datos: [], grafica: "grafica_planta2_2", status: "status_planta2_2"}
+      1: {nombre: "Membrana 1", topic: "sensor/plantas/5", datos: [], grafica: "grafica_planta_5", status: "status_planta_5"},
+      2: {nombre: "Membrana 2", topic: "sensor/plantas/6", datos: [], grafica: "grafica_planta_6", status: "status_planta_6"}
     }
   },
   planta3: { 
     clientId: "ESP32_Planta3", 
-    categoria: "con_agua",
+    categoria: "con_riego",
     sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/5", datos: [], grafica: "grafica_planta3_1", status: "status_planta3_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/6", datos: [], grafica: "grafica_planta3_2", status: "status_planta3_2"}
+      1: {nombre: "Membrana 1", topic: "sensor/plantas/7", datos: [], grafica: "grafica_planta_7", status: "status_planta_7"},
+      2: {nombre: "Membrana 2", topic: "sensor/plantas/8", datos: [], grafica: "grafica_planta_8", status: "status_planta_8"}
     }
   },
-  planta4: { 
-    clientId: "ESP32_Planta4", 
-    categoria: "con_agua",
+  plantaControl_sin: { 
+    clientId: "ESP32_ControlSin", 
+    categoria: "sin_riego",
     sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/7", datos: [], grafica: "grafica_planta4_1", status: "status_planta4_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/8", datos: [], grafica: "grafica_planta4_2", status: "status_planta4_2"}
+      1: {nombre: "Membrana 1", topic: "sensor/plantas/9", datos: [], grafica: "grafica_planta_9", status: "status_planta_9"},
+      2: {nombre: "Membrana 2", topic: "sensor/plantas/10", datos: [], grafica: "grafica_planta_10", status: "status_planta_10"}
     }
   },
   planta5: { 
     clientId: "ESP32_Planta5", 
-    categoria: "con_agua",
+    categoria: "sin_riego",
     sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/9", datos: [], grafica: "grafica_planta5_1", status: "status_planta5_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/10", datos: [], grafica: "grafica_planta5_2", status: "status_planta5_2"}
+      1: {nombre: "Membrana 1", topic: "sensor/plantas/11", datos: [], grafica: "grafica_planta_11", status: "status_planta_11"},
+      2: {nombre: "Membrana 2", topic: "sensor/plantas/12", datos: [], grafica: "grafica_planta_12", status: "status_planta_12"}
     }
   },
   planta6: { 
     clientId: "ESP32_Planta6", 
-    categoria: "sin_agua",
+    categoria: "sin_riego",
     sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/11", datos: [], grafica: "grafica_planta6_1", status: "status_planta6_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/12", datos: [], grafica: "grafica_planta6_2", status: "status_planta6_2"}
+      1: {nombre: "Membrana 1", topic: "sensor/plantas/13", datos: [], grafica: "grafica_planta_13", status: "status_planta_13"},
+      2: {nombre: "Membrana 2", topic: "sensor/plantas/14", datos: [], grafica: "grafica_planta_14", status: "status_planta_14"}
     }
   },
   planta7: { 
     clientId: "ESP32_Planta7", 
-    categoria: "sin_agua",
+    categoria: "sin_riego",
     sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/13", datos: [], grafica: "grafica_planta7_1", status: "status_planta7_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/14", datos: [], grafica: "grafica_planta7_2", status: "status_planta7_2"}
+      1: {nombre: "Membrana 1", topic: "sensor/plantas/15", datos: [], grafica: "grafica_planta_15", status: "status_planta_15"},
+      2: {nombre: "Membrana 2", topic: "sensor/plantas/16", datos: [], grafica: "grafica_planta_16", status: "status_planta_16"}
     }
   },
-  planta8: { 
-    clientId: "ESP32_Planta8", 
-    categoria: "sin_agua",
-    sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/15", datos: [], grafica: "grafica_planta8_1", status: "status_planta8_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/16", datos: [], grafica: "grafica_planta8_2", status: "status_planta8_2"}
-    }
-  },
-  planta9: { 
-    clientId: "ESP32_Planta9", 
-    categoria: "sin_agua",
-    sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/17", datos: [], grafica: "grafica_planta9_1", status: "status_planta9_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/18", datos: [], grafica: "grafica_planta9_2", status: "status_planta9_2"}
-    }
-  },
-  planta10: { 
-    clientId: "ESP32_Planta10", 
-    categoria: "sin_agua",
-    sensores: {
-      1: {nombre: "Sensor Humedad", topic: "sensor/plantas/19", datos: [], grafica: "grafica_planta10_1", status: "status_planta10_1"},
-      2: {nombre: "Sensor Temperatura", topic: "sensor/plantas/20", datos: [], grafica: "grafica_planta10_2", status: "status_planta10_2"}
-    }
-  }
+   
 };
 
 // ------------------ GENERAR BLOQUES ------------------
 Object.keys(ESPs).forEach(espKey=>{
   const espDiv = document.getElementById(espKey);
   const esp = ESPs[espKey];
+  
+  if (!espDiv) {
+    console.error(`Elemento no encontrado: ${espKey}`);
+    return;
+  }
   
   espDiv.innerHTML = `<div style="margin-bottom:10px;font-weight:bold;">Cliente MQTT: <span id="status_${espKey}">Conectando...</span></div>`;
   
@@ -207,9 +195,11 @@ Object.keys(ESPs).forEach(espKey=>{
 });
 
 // ------------------ CONEXIÓN MQTT ------------------
-Object.keys(ESPs).forEach(espKey=>{
-  const esp = ESPs[espKey];
-  esp.client = mqtt.connect("wss://broker.emqx.io:8084/mqtt",{ clientId: esp.clientId, keepalive:60, reconnectPeriod:3000 });
+document.addEventListener('DOMContentLoaded', function() {
+  Object.keys(ESPs).forEach(espKey=>{
+    const esp = ESPs[espKey];
+    console.log(`Conectando ${esp.clientId}...`);
+    esp.client = mqtt.connect("wss://broker.emqx.io:8084/mqtt",{ clientId: esp.clientId, keepalive:60, reconnectPeriod:3000 });
 
   esp.client.on("connect", ()=>{
     document.getElementById(`status_${espKey}`).textContent="Conectado ✅";
@@ -232,11 +222,11 @@ Object.keys(ESPs).forEach(espKey=>{
           document.getElementById(`Rx_${espKey}_${sId}`).textContent=data.Rx;
 
           // Tiempo total sensado en horas, min y seg
-          const totalSeg = s.datos.length * 3; // cada dato representa 3s
-          const h = Math.floor(totalSeg/3600);
-          const m = Math.floor((totalSeg%3600)/60);
-          const sRest = totalSeg%60;
-          document.getElementById(`Tiempo_${espKey}_${sId}`).textContent=`${h}h ${m}m ${sRest}s`;
+          const totalMin = s.datos.length; // cada dato representa 1 minuto
+          const totalSeg = totalMin * 60;
+          const h = Math.floor(totalMin/60);
+          const m = totalMin%60;
+          document.getElementById(`Tiempo_${espKey}_${sId}`).textContent=`${h}h ${m}m 0s`;
 
           if(!s.ultimoTiempoGrafica) s.ultimoTiempoGrafica=0;
           if(data.tiempo - s.ultimoTiempoGrafica >=3){
@@ -253,6 +243,7 @@ Object.keys(ESPs).forEach(espKey=>{
       });
     }catch(e){ console.error(e); }
   });
+  });
 });
 
 // ------------------ DESCARGA ------------------
@@ -265,25 +256,61 @@ function descargarExcel(espKey,sId){
 }
 
 // ------------------ PESTAÑAS ------------------
-document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click", ()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
-    tab.classList.add("active");
-    document.getElementById(tab.dataset.target).classList.add("active");
+function initTabs() {
+  console.log("Inicializando pestañas...");
+  
+  // Pestañas principales
+  document.querySelectorAll(".tab").forEach(tab=>{
+    console.log("Configurando pestaña:", tab.dataset.target);
+    tab.addEventListener("click", (e)=>{
+      e.preventDefault();
+      console.log("Click en pestaña:", tab.dataset.target);
+      
+      document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
+      
+      tab.classList.add("active");
+      const targetElement = document.getElementById(tab.dataset.target);
+      if (targetElement) {
+        targetElement.classList.add("active");
+        console.log("Pestaña activada:", tab.dataset.target);
+      } else {
+        console.error("Elemento no encontrado:", tab.dataset.target);
+      }
+    });
   });
-});
 
-// ------------------ SUBPESTAÑAS ------------------
-document.querySelectorAll(".subtab").forEach(subtab=>{
-  subtab.addEventListener("click", ()=>{
-    const parent = subtab.closest('.tab-content');
-    parent.querySelectorAll(".subtab").forEach(t=>t.classList.remove("active"));
-    parent.querySelectorAll(".subtab-content").forEach(c=>c.classList.remove("active"));
-    subtab.classList.add("active");
-    document.getElementById(subtab.dataset.target).classList.add("active");
+  // Subpestañas
+  document.querySelectorAll(".subtab").forEach(subtab=>{
+    console.log("Configurando subpestaña:", subtab.dataset.target);
+    subtab.addEventListener("click", (e)=>{
+      e.preventDefault();
+      console.log("Click en subpestaña:", subtab.dataset.target);
+      
+      const parent = subtab.closest('.tab-content');
+      if (parent) {
+        parent.querySelectorAll(".subtab").forEach(t=>t.classList.remove("active"));
+        parent.querySelectorAll(".subtab-content").forEach(c=>c.classList.remove("active"));
+        
+        subtab.classList.add("active");
+        const targetElement = document.getElementById(subtab.dataset.target);
+        if (targetElement) {
+          targetElement.classList.add("active");
+          console.log("Subpestaña activada:", subtab.dataset.target);
+        } else {
+          console.error("Elemento subpestaña no encontrado:", subtab.dataset.target);
+        }
+      }
+    });
   });
-});
+}
+
+// Inicializar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTabs);
+} else {
+  initTabs();
+}
 </script>
 </body>
 </html>
