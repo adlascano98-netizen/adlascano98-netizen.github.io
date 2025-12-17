@@ -190,7 +190,7 @@ Object.keys(ESPs).forEach(espKey=>{
     s.graficaObj = new Chart(ctx,{
       type:'line',
       data:{ labels:[], datasets:[{ label: s.nombre + ' VD vs Tiempo', data:[], borderColor:'blue', fill:false, tension: 0.1 }] },
-      options: { responsive: true,maintainAspectRatio: false,scales: { x: { title: { display: true, text: "Tiempo (s)" },grid: {display: true}}, y: {title: { display: true, text: "VD (V)" },min: 0,max: 1.7,grid: {display: true}} },plugins: {legend: {display: true,position: 'top',}},animation: {duration: 0},elements: {point: {radius: 0}}}});
+      options: { responsive: true,maintainAspectRatio: false,scales: { x: { title: { display: true, text: "Tiempo (s)" },grid: {display: true}}, y: {title: { display: true, text: "VD (V)" },grid: {display: true}} },plugins: {legend: {display: true,position: 'top',}},animation: {duration: 0},elements: {point: {radius: 0}}}});
   });
 });
 
