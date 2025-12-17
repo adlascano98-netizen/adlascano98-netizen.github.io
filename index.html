@@ -197,88 +197,98 @@ Object.keys(ESPs).forEach(espKey=>{
 // ------------------ CONEXIÓN MQTT ------------------
 document.addEventListener('DOMContentLoaded', function() {
   const sessionSuffix = Math.random().toString(16).slice(2);
+  const webClientId = `WEB_${sessionSuffix}`;
+  const client = mqtt.connect("wss://broker.emqx.io:8084/mqtt",{ clientId: webClientId, keepalive:60, reconnectPeriod:3000 });
+
+  const topicToSensor = {};
   Object.keys(ESPs).forEach(espKey=>{
     const esp = ESPs[espKey];
-    console.log(`Conectando ${esp.clientId}...`);
-    const webClientId = `${esp.clientId}_${sessionSuffix}`;
-    esp.client = mqtt.connect("wss://broker.emqx.io:8084/mqtt",{ clientId: webClientId, keepalive:60, reconnectPeriod:3000 });
-
-  esp.client.on("reconnect", ()=>{
-    console.warn(`MQTT reconnect ${espKey} (${webClientId})`);
+    Object.keys(esp.sensores).forEach(sId=>{
+      const s = esp.sensores[sId];
+      topicToSensor[s.topic] = { espKey, sId, s };
+    });
   });
 
-  esp.client.on("offline", ()=>{
-    console.warn(`MQTT offline ${espKey} (${webClientId})`);
-    const statusEl = document.getElementById(`status_${espKey}`);
-    if (statusEl) statusEl.textContent = "Offline ❌";
+  client.on("reconnect", ()=>{
+    console.warn(`MQTT reconnect (web) (${webClientId})`);
   });
 
-  esp.client.on("close", ()=>{
-    console.warn(`MQTT close ${espKey} (${webClientId})`);
+  client.on("offline", ()=>{
+    console.warn(`MQTT offline (web) (${webClientId})`);
+    Object.keys(ESPs).forEach(espKey=>{
+      const statusEl = document.getElementById(`status_${espKey}`);
+      if (statusEl) statusEl.textContent = "Offline ❌";
+    });
   });
 
-  esp.client.on("error", (err)=>{
-    console.error(`MQTT error ${espKey} (${webClientId})`, err);
-    const statusEl = document.getElementById(`status_${espKey}`);
-    if (statusEl) statusEl.textContent = "Error ❌";
+  client.on("close", ()=>{
+    console.warn(`MQTT close (web) (${webClientId})`);
   });
 
-  esp.client.on("connect", ()=>{
-    document.getElementById(`status_${espKey}`).textContent="Conectado ✅";
-    Object.values(esp.sensores).forEach(s=>{
-      esp.client.subscribe(s.topic, err=>{
-        if (err) {
-          document.getElementById(s.status).textContent = "Error ❌";
-          return;
-        }
-        document.getElementById(s.status).textContent = "Esperando datos ⏳";
+  client.on("error", (err)=>{
+    console.error(`MQTT error (web) (${webClientId})`, err);
+    Object.keys(ESPs).forEach(espKey=>{
+      const statusEl = document.getElementById(`status_${espKey}`);
+      if (statusEl) statusEl.textContent = "Error ❌";
+    });
+  });
+
+  client.on("connect", ()=>{
+    Object.keys(ESPs).forEach(espKey=>{
+      const statusEl = document.getElementById(`status_${espKey}`);
+      if (statusEl) statusEl.textContent = "Conectado ✅";
+    });
+
+    Object.keys(topicToSensor).forEach(topic=>{
+      const map = topicToSensor[topic];
+      const s = map.s;
+      client.subscribe(topic, err=>{
+        document.getElementById(s.status).textContent = err ? "Error ❌" : "Esperando datos ⏳";
         s.lastMessageAt = null;
         if (s.offlineTimer) clearTimeout(s.offlineTimer);
       });
     });
   });
 
-  esp.client.on("message",(topic,message)=>{
+  client.on("message",(topic,message)=>{
     try{
+      const map = topicToSensor[topic];
+      if (!map) return;
+      const { espKey, sId, s } = map;
       const data = JSON.parse(message.toString());
-      Object.keys(esp.sensores).forEach(sId=>{
-        const s = esp.sensores[sId];
-        if(s.topic===topic){
-          const tiempoNum = Number(data.tiempo);
-          s.datos.push([tiempoNum,data.VD,data.Rx]);
 
-          s.lastMessageAt = Date.now();
-          document.getElementById(s.status).textContent = "Recibiendo ✅";
-          if (s.offlineTimer) clearTimeout(s.offlineTimer);
-          s.offlineTimer = setTimeout(() => {
-            document.getElementById(s.status).textContent = "Sin datos ❌";
-          }, 150000);
+      const tiempoNum = Number(data.tiempo);
+      s.datos.push([tiempoNum,data.VD,data.Rx]);
 
-          document.getElementById(`VD_${espKey}_${sId}`).textContent=data.VD;
-          document.getElementById(`Rx_${espKey}_${sId}`).textContent=data.Rx;
+      s.lastMessageAt = Date.now();
+      document.getElementById(s.status).textContent = "Recibiendo ✅";
+      if (s.offlineTimer) clearTimeout(s.offlineTimer);
+      s.offlineTimer = setTimeout(() => {
+        document.getElementById(s.status).textContent = "Sin datos ❌";
+      }, 150000);
 
-          // Tiempo total sensado en horas, min y seg
-          const totalMin = s.datos.length; // cada dato representa 1 minuto
-          const totalSeg = totalMin * 60;
-          const h = Math.floor(totalMin/60);
-          const m = totalMin%60;
-          document.getElementById(`Tiempo_${espKey}_${sId}`).textContent=`${h}h ${m}m 0s`;
+      document.getElementById(`VD_${espKey}_${sId}`).textContent=data.VD;
+      document.getElementById(`Rx_${espKey}_${sId}`).textContent=data.Rx;
 
-          if(s.ultimoTiempoGrafica === undefined || s.ultimoTiempoGrafica === null) s.ultimoTiempoGrafica = -Infinity;
-          if(tiempoNum - s.ultimoTiempoGrafica >= 1){
-            s.graficaObj.data.labels.push(tiempoNum);
-            s.graficaObj.data.datasets[0].data.push(data.VD);
-            if(s.graficaObj.data.labels.length>50){
-              s.graficaObj.data.labels.shift();
-              s.graficaObj.data.datasets[0].data.shift();
-            }
-            s.graficaObj.update();
-            s.ultimoTiempoGrafica = tiempoNum;
-          }
+      // Tiempo total sensado en horas, min y seg
+      const totalMin = s.datos.length; // cada dato representa 1 minuto
+      const totalSeg = totalMin * 60;
+      const h = Math.floor(totalMin/60);
+      const m = totalMin%60;
+      document.getElementById(`Tiempo_${espKey}_${sId}`).textContent=`${h}h ${m}m 0s`;
+
+      if(s.ultimoTiempoGrafica === undefined || s.ultimoTiempoGrafica === null) s.ultimoTiempoGrafica = -Infinity;
+      if(tiempoNum - s.ultimoTiempoGrafica >= 1){
+        s.graficaObj.data.labels.push(tiempoNum);
+        s.graficaObj.data.datasets[0].data.push(data.VD);
+        if(s.graficaObj.data.labels.length>50){
+          s.graficaObj.data.labels.shift();
+          s.graficaObj.data.datasets[0].data.shift();
         }
-      });
+        s.graficaObj.update();
+        s.ultimoTiempoGrafica = tiempoNum;
+      }
     }catch(e){ console.error(e); }
-  });
   });
 });
 
