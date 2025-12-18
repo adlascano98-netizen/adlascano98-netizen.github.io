@@ -240,6 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   client.on("connect", ()=>{
+    console.log(`MQTT connect (web) (${webClientId})`);
     Object.keys(ESPs).forEach(espKey=>{
       const statusEl = document.getElementById(`status_${espKey}`);
       if (statusEl) statusEl.textContent = "Conectado ✅";
@@ -249,6 +250,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const map = topicToSensor[topic];
       const s = map.s;
       client.subscribe(topic, err=>{
+        if (err) {
+          console.error("MQTT subscribe error", { topic, err });
+        }
         document.getElementById(s.status).textContent = err ? "Error ❌" : "Esperando datos ⏳";
         s.lastMessageAt = null;
         if (s.offlineTimer) clearTimeout(s.offlineTimer);
