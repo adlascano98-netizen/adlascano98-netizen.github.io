@@ -241,6 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   client.on("connect", ()=>{
     console.log(`MQTT connect (web) (${webClientId})`);
+    console.log(`MQTT suscribiendo a ${Object.keys(topicToSensor).length} topics`);
     Object.keys(ESPs).forEach(espKey=>{
       const statusEl = document.getElementById(`status_${espKey}`);
       if (statusEl) statusEl.textContent = "Conectado ✅";
@@ -263,9 +264,16 @@ document.addEventListener('DOMContentLoaded', function() {
   client.on("message",(topic,message)=>{
     try{
       const map = topicToSensor[topic];
-      if (!map) return;
+      if (!map) {
+        console.warn("MQTT mensaje en topic no mapeado", { topic });
+        return;
+      }
       const { espKey, sId, s } = map;
       const data = JSON.parse(message.toString());
+
+      if (topic.startsWith("sensor/plantas/11") || topic.startsWith("sensor/plantas/12") || topic.startsWith("sensor/plantas/13") || topic.startsWith("sensor/plantas/14") || topic.startsWith("sensor/plantas/15") || topic.startsWith("sensor/plantas/16")) {
+        console.log("MQTT msg 11-16", { topic, espKey, sId, VD: data.VD, Rx: data.Rx, tiempo: data.tiempo });
+      }
 
       const tiempoNum = Number(data.tiempo);
       s.datos.push([tiempoNum,data.VD,data.Rx]);
