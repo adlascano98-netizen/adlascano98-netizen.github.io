@@ -296,6 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById(`Tiempo_${espKey}_${sId}`).textContent=`${h}h ${m}m 0s`;
 
       if(s.ultimoTiempoGrafica === undefined || s.ultimoTiempoGrafica === null) s.ultimoTiempoGrafica = -Infinity;
+      console.log(`Grafica ${espKey}_${sId}: tiempo=${tiempoNum}, ultimoTiempo=${s.ultimoTiempoGrafica}, diff=${tiempoNum - s.ultimoTiempoGrafica}`);
       if(tiempoNum - s.ultimoTiempoGrafica >= 0.1){
         s.graficaObj.data.labels.push(tiempoNum);
         s.graficaObj.data.datasets[0].data.push(data.VD);
