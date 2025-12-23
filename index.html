@@ -263,9 +263,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   client.on("message",(topic,message)=>{
     try{
+      console.log(`MQTT message received: ${topic}`);
       const map = topicToSensor[topic];
       if (!map) {
-        console.warn("MQTT mensaje en topic no mapeado", { topic });
+        console.warn(`MQTT mensaje en topic no mapeado: ${topic}`);
+        console.log(`topicToSensor keys:`, Object.keys(topicToSensor));
         return;
       }
       const { espKey, sId, s } = map;
