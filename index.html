@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById(`Tiempo_${espKey}_${sId}`).textContent=`${h}h ${m}m 0s`;
 
       if(s.ultimoTiempoGrafica === undefined || s.ultimoTiempoGrafica === null) s.ultimoTiempoGrafica = -Infinity;
-      if(tiempoNum - s.ultimoTiempoGrafica >= 1){
+      if(tiempoNum - s.ultimoTiempoGrafica >= 0.1){
         s.graficaObj.data.labels.push(tiempoNum);
         s.graficaObj.data.datasets[0].data.push(data.VD);
         if(s.graficaObj.data.labels.length>50){
