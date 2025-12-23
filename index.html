@@ -262,8 +262,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   client.on("message",(topic,message)=>{
+    console.log(`MQTT RAW message received: ${topic} at ${new Date().toISOString()}`);
     try{
-      console.log(`MQTT message received: ${topic}`);
       const map = topicToSensor[topic];
       if (!map) {
         console.warn(`MQTT mensaje en topic no mapeado: ${topic}`);
@@ -383,3 +383,4 @@ if (document.readyState === 'loading') {
 </script>
 </body>
 </html>
+
