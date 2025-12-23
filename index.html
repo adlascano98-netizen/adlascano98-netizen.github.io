@@ -300,6 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if(s.ultimoTiempoGrafica === undefined || s.ultimoTiempoGrafica === null) s.ultimoTiempoGrafica = -Infinity;
       console.log(`Grafica ${espKey}_${sId}: tiempo=${tiempoNum}, ultimoTiempo=${s.ultimoTiempoGrafica}, diff=${tiempoNum - s.ultimoTiempoGrafica}`);
       if(tiempoNum - s.ultimoTiempoGrafica >= 0.1){
+        console.log(`Actualizando gráfica ${espKey}_${sId}: datos=${s.datos.length}, labels=${s.graficaObj.data.labels.length}, datasets=${s.graficaObj.data.datasets[0].data.length}`);
         s.graficaObj.data.labels.push(tiempoNum);
         s.graficaObj.data.datasets[0].data.push(data.VD);
         if(s.graficaObj.data.labels.length>50){
@@ -308,6 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         s.graficaObj.update();
         s.ultimoTiempoGrafica = tiempoNum;
+        console.log(`Gráfica actualizada ${espKey}_${sId}: nuevos labels=${s.graficaObj.data.labels.length}, nuevos data=${s.graficaObj.data.datasets[0].data.length}`);
       }
     }catch(e){ console.error(e); }
   });
