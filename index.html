@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const sessionSuffix = Math.random().toString(16).slice(2);
   const webClientId = `WEB_${sessionSuffix}`;
   console.log(`MQTT creando cliente web: ${webClientId}`);
-  const client = mqtt.connect("mqtt://broker.emqx.io:1883",{ clientId: webClientId, keepalive:60, reconnectPeriod:3000 });
+  const client = mqtt.connect("wss://broker.emqx.io:8084/mqtt",{ clientId: webClientId, keepalive:60, reconnectPeriod:3000 });
 
   setTimeout(() => {
     if (!client.connected) {
